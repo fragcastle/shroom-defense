@@ -24,4 +24,14 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
+	
+	void OnMouseDrag() 
+	{ 
+		Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 1);
+		
+		Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint);
+		
+		transform.position = curPosition;
+		
+	}
 }
