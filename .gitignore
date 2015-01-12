@@ -1,0 +1,9 @@
+*.DS_Store
+*.blend1
+*.csproj
+*.unityproj
+*.sln
+*.userprefs
+
+Library/
+Temp/
