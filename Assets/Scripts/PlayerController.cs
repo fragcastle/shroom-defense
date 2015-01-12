@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseBehavior
 {
 	private Transform _cursorTarget;
 	private int _gridSize = 6;
@@ -18,21 +18,37 @@ public class PlayerController : MonoBehaviour
 	
 	void Update ()
 	{
-		RaycastHit hit;
-		var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		
-		if (Physics.Raycast(ray, out hit))
+		if (!IsMobile())
 		{
-			var snapPosition = SnapXAndZToGrid(hit.point);
+			RaycastHit hit;
 			
-			_cursorTarget.position = snapPosition;
-		
-			if (Money >= 100 && Input.GetButtonDown("Fire1"))
+			var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			
+			if (Physics.Raycast(ray, out hit))
 			{
-				var position = snapPosition;
-				Instantiate(SelectedTower, new Vector3(position.x, hit.point.y, position.z), Quaternion.identity);
+				var snapPosition = SnapXAndZToGrid(hit.point);
 				
-				Money -= 100;
+				_cursorTarget.position = snapPosition;
+			}
+		}
+		
+		if (Input.GetButtonDown("Fire1") || (Input.touchCount > 0))
+		{
+			if (Money >= 100)
+			{
+				RaycastHit hit;
+				
+				var position = IsMobile() ? new Vector3(Input.touches[0].position.x, Input.touches[0].position.y) : Input.mousePosition;
+				
+				var ray = Camera.main.ScreenPointToRay(position);
+				
+				if (Physics.Raycast(ray, out hit))
+				{
+					var snapPosition = SnapXAndZToGrid(hit.point);
+					Instantiate(SelectedTower, new Vector3(snapPosition.x, hit.point.y, snapPosition.z), Quaternion.identity);
+					
+					Money -= 100;
+				}
 			}
 		}
 	}
